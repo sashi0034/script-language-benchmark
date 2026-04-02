@@ -65,21 +65,16 @@ int main() {
             const bool has_script_function = lua_isfunction(L, -1);
             lua_pop(L, 1);
 
+            slc::BenchmarkSample sample;
             if (!has_script_function) {
-                std::cerr << "[Lua] fallback to native workload for '" << item.name << "'\n";
-            }
-
-            auto sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
-                if (has_script_function) {
+                std::cerr << "[Lua] missing script function '" << item.name << "', recording zero time\n";
+                sample.name = item.name;
+                sample.repeat_count = item.repeat_count;
+            } else {
+                sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
                     slc::consume(execute_benchmark_function(L, fn_name, repeat_count));
-                    return;
-                }
-                for (int i = 0; i < repeat_count; ++i) {
-                    if (!slc::run_named_native_workload(item.name)) {
-                        throw std::runtime_error("unknown workload name: " + std::string(item.name));
-                    }
-                }
-            });
+                });
+            }
 
             std::cout << "[Lua] " << sample.name
                       << " best=" << slc::format_double(sample.best_ms)

@@ -3,6 +3,9 @@
 
 #include "../angelscript-2.38.0/sdk/add_on/scriptarray/scriptarray.h"
 #include "../angelscript-2.38.0/sdk/add_on/scriptbuilder/scriptbuilder.h"
+#include "../angelscript-2.38.0/sdk/add_on/scriptstdstring/scriptstdstring.h"
+#include "../angelscript-2.38.0/sdk/add_on/scriptdictionary/scriptdictionary.h"
+#include "../angelscript-2.38.0/sdk/add_on/scriptmath/scriptmath.h"
 #include "../angelscript-2.38.0/sdk/angelscript/include/angelscript.h"
 
 #include <filesystem>
@@ -58,6 +61,9 @@ int main() {
 
     engine->SetMessageCallback(asFUNCTION(message_callback), nullptr, asCALL_CDECL);
     RegisterScriptArray(engine, true);
+    RegisterStdString(engine);
+    RegisterScriptDictionary(engine);
+    RegisterScriptMath(engine);
 
     try {
         CScriptBuilder builder;
@@ -85,22 +91,17 @@ int main() {
         for (const auto &item : slc::benchmark_items()) {
             const std::string decl = std::string("uint64 benchmark_") + item.name + "(int)";
             asIScriptFunction *fn = module->GetFunctionByDecl(decl.c_str());
-            const bool use_native_fallback = (fn == nullptr);
-            if (use_native_fallback) {
-                std::cerr << "[AngelScript] fallback to native workload for '" << item.name << "'\n";
-            }
-
-            auto sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
-                if (fn) {
+            const bool missing_script_fn = (fn == nullptr);
+            slc::BenchmarkSample sample;
+            if (missing_script_fn) {
+                std::cerr << "[AngelScript] missing script function '" << item.name << "', recording zero time\n";
+                sample.name = item.name;
+                sample.repeat_count = item.repeat_count;
+            } else {
+                sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
                     slc::consume(execute_function(ctx.get(), fn, repeat_count));
-                    return;
-                }
-                for (int i = 0; i < repeat_count; ++i) {
-                    if (!slc::run_named_native_workload(item.name)) {
-                        throw std::runtime_error("unknown workload name: " + std::string(item.name));
-                    }
-                }
-            });
+                });
+            }
 
             std::cout << "[AngelScript] " << sample.name
                       << " best=" << slc::format_double(sample.best_ms)

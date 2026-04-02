@@ -64,11 +64,13 @@ int main() {
         for (const auto &item : slc::benchmark_items()) {
             const std::string fn_name = std::string("benchmark_") + item.name;
             auto *fn = ctx.findFunction(fn_name.c_str());
+            slc::BenchmarkSample sample;
             if (!fn) {
-                std::cerr << "[Daslang] fallback to native workload for '" << item.name << "'\n";
-            }
-            auto sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
-                if (fn) {
+                std::cerr << "[Daslang] missing script function '" << item.name << "', recording zero time\n";
+                sample.name = item.name;
+                sample.repeat_count = item.repeat_count;
+            } else {
+                sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
                     ctx.restart();
                     const auto result = das_invoke_function_by_name<std::uint64_t>::invoke<int>(
                         &ctx, nullptr, fn_name.c_str(), repeat_count);
@@ -76,15 +78,8 @@ int main() {
                         throw std::runtime_error(std::string("daslang exception: ") + ex);
                     }
                     slc::consume(result);
-                    return;
-                }
-
-                for (int i = 0; i < repeat_count; ++i) {
-                    if (!slc::run_named_native_workload(item.name)) {
-                        throw std::runtime_error("unknown workload name: " + std::string(item.name));
-                    }
-                }
-            });
+                });
+            }
 
             std::cout << "[Daslang] " << sample.name
                       << " best=" << slc::format_double(sample.best_ms)
