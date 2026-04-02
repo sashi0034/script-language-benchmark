@@ -37,22 +37,22 @@ Each language bundles the workload implementations inside one script under `scri
 ## Latest Benchmarks (report dated April 2 2026)
 | item | AngelScript | Daslang | Lua | winner |
 | --- | ---: | ---: | ---: | --- |
-| dictionary | 1.192 | 1.087 | 3.954 | Daslang |
-| exp_loop | 1.114 | 1.091 | 9.032 | Daslang |
-| fibonacci_loop | 52.941 | 18.536 | 25.854 | Daslang |
-| fibonacci_recursive | 762.154 | 263.237 | 578.521 | Daslang |
-| float2string | 17.775 | 18.944 | 41.009 | AngelScript |
-| mandelbrot | 58.353 | 31.189 | 47.228 | Daslang |
-| n_bodies | 0.213 | 0.213 | 0.213 | AngelScript / Daslang / Lua |
-| native_loop | 8.615 | 8.555 | 295.265 | Daslang |
-| particles_kinematics | 6.398 | 6.486 | 6.573 | AngelScript |
-| primes_loop | 28.449 | 7.716 | 12.921 | Daslang |
-| queen | 243.795 | 129.541 | 208.761 | Daslang |
-| sha256 | 3.787 | 4.168 | 3.821 | AngelScript |
-| sort | 338.213 | 103.294 | 3.949 | Lua |
-| spectral_norm | 3.633 | 3.630 | 3.630 | Daslang / Lua |
-| string2float | 34.216 | 34.754 | 47.020 | AngelScript |
-| tree | 4.873 | 4.584 | 30.922 | Daslang |
+| dictionary | 20.888 | 2.516 | 4.025 | Daslang |
+| exp_loop | 12.008 | 4.109 | 9.458 | Daslang |
+| fibonacci_loop | 52.867 | 19.191 | 26.914 | Daslang |
+| fibonacci_recursive | 795.218 | 266.421 | 599.702 | Daslang |
+| float2string | 44.533 | 43.780 | 61.268 | Daslang |
+| mandelbrot | 58.432 | 32.085 | 78.444 | Daslang |
+| n_bodies | 14.322 | 4.264 | 13.874 | Daslang |
+| native_loop | 505.445 | 540.573 | 506.997 | AngelScript |
+| particles_kinematics | 933.839 | 440.880 | 1156.507 | Daslang |
+| primes_loop | 30.016 | 14.565 | 23.000 | Daslang |
+| queen | 253.849 | 241.437 | 333.410 | Daslang |
+| sha256 | 321.877 | 224.411 | 549.956 | Daslang |
+| sort | 328.950 | 237.142 | 6.175 | Lua |
+| spectral_norm | 188.622 | 185.926 | 259.634 | Daslang |
+| string2float | 84.277 | 107.174 | 68.624 | Lua |
+| tree | 62.949 | 17.496 | 59.757 | Daslang |
 
 ## Measurement Environment
 - Date: April 2, 2026

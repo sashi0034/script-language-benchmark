@@ -1,0 +1,117 @@
+{
+  "runtime": "AngelScript",
+  "items": [
+    {
+      "name": "dictionary",
+      "repeat_count": 10,
+      "best_ms": 20.888,
+      "median_ms": 21.036,
+      "runs_ms": [21.130, 24.802, 20.888, 21.036, 20.955]
+    },
+    {
+      "name": "exp_loop",
+      "repeat_count": 8,
+      "best_ms": 12.008,
+      "median_ms": 12.290,
+      "runs_ms": [12.029, 12.657, 12.290, 12.008, 12.532]
+    },
+    {
+      "name": "fibonacci_loop",
+      "repeat_count": 14,
+      "best_ms": 52.867,
+      "median_ms": 53.264,
+      "runs_ms": [53.966, 54.227, 52.867, 53.264, 52.905]
+    },
+    {
+      "name": "fibonacci_recursive",
+      "repeat_count": 8,
+      "best_ms": 795.218,
+      "median_ms": 799.898,
+      "runs_ms": [796.533, 799.898, 800.955, 795.218, 802.838]
+    },
+    {
+      "name": "float2string",
+      "repeat_count": 8,
+      "best_ms": 44.533,
+      "median_ms": 44.662,
+      "runs_ms": [44.608, 44.533, 45.209, 44.662, 45.293]
+    },
+    {
+      "name": "mandelbrot",
+      "repeat_count": 8,
+      "best_ms": 58.432,
+      "median_ms": 59.620,
+      "runs_ms": [58.432, 59.620, 59.624, 59.844, 59.188]
+    },
+    {
+      "name": "n_bodies",
+      "repeat_count": 12,
+      "best_ms": 14.322,
+      "median_ms": 14.618,
+      "runs_ms": [14.618, 14.839, 14.322, 14.573, 14.882]
+    },
+    {
+      "name": "native_loop",
+      "repeat_count": 8,
+      "best_ms": 505.445,
+      "median_ms": 509.825,
+      "runs_ms": [536.587, 521.692, 509.825, 505.445, 505.786]
+    },
+    {
+      "name": "particles_kinematics",
+      "repeat_count": 10,
+      "best_ms": 933.839,
+      "median_ms": 952.680,
+      "runs_ms": [936.346, 933.839, 967.735, 952.680, 975.743]
+    },
+    {
+      "name": "primes_loop",
+      "repeat_count": 10,
+      "best_ms": 30.016,
+      "median_ms": 30.229,
+      "runs_ms": [30.229, 30.485, 30.016, 30.429, 30.114]
+    },
+    {
+      "name": "queen",
+      "repeat_count": 8,
+      "best_ms": 253.849,
+      "median_ms": 285.446,
+      "runs_ms": [253.849, 285.446, 317.474, 382.489, 265.401]
+    },
+    {
+      "name": "sha256",
+      "repeat_count": 8,
+      "best_ms": 321.877,
+      "median_ms": 336.209,
+      "runs_ms": [340.751, 333.338, 375.778, 321.877, 336.209]
+    },
+    {
+      "name": "sort",
+      "repeat_count": 10,
+      "best_ms": 328.950,
+      "median_ms": 342.740,
+      "runs_ms": [342.035, 351.572, 343.721, 328.950, 342.740]
+    },
+    {
+      "name": "spectral_norm",
+      "repeat_count": 8,
+      "best_ms": 188.622,
+      "median_ms": 191.834,
+      "runs_ms": [198.322, 191.834, 193.107, 191.683, 188.622]
+    },
+    {
+      "name": "string2float",
+      "repeat_count": 8,
+      "best_ms": 84.277,
+      "median_ms": 87.011,
+      "runs_ms": [84.277, 87.491, 87.474, 87.011, 85.679]
+    },
+    {
+      "name": "tree",
+      "repeat_count": 8,
+      "best_ms": 62.949,
+      "median_ms": 69.450,
+      "runs_ms": [62.949, 69.450, 81.004, 85.488, 68.348]
+    }
+  ]
+}

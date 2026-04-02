@@ -8,6 +8,7 @@
 #include "../angelscript-2.38.0/sdk/add_on/scriptmath/scriptmath.h"
 #include "../angelscript-2.38.0/sdk/angelscript/include/angelscript.h"
 
+#include <cmath>
 #include <filesystem>
 #include <functional>
 #include <iostream>
@@ -46,6 +47,10 @@ std::uint64_t execute_function(asIScriptContext *ctx, asIScriptFunction *fn, int
     return static_cast<std::uint64_t>(ctx->GetReturnQWord());
 }
 
+double exp_double(double value) {
+    return std::exp(value);
+}
+
 }  // namespace
 
 int main() {
@@ -64,6 +69,8 @@ int main() {
     RegisterStdString(engine);
     RegisterScriptDictionary(engine);
     RegisterScriptMath(engine);
+    require(engine->RegisterGlobalFunction("double exp(double)", asFUNCTION(exp_double), asCALL_CDECL),
+            "failed to register exp");
 
     try {
         CScriptBuilder builder;
