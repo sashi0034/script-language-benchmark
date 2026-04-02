@@ -463,4 +463,44 @@ inline void bench_tree_native() {
     consume(checksum_tree(tree.get()));
 }
 
+
+inline bool run_named_native_workload(std::string_view name) {
+    if (name == "dictionary") {
+        bench_dictionary_native();
+    } else if (name == "exp_loop") {
+        bench_exp_loop_native();
+    } else if (name == "fibonacci_loop") {
+        bench_fibonacci_loop_native();
+    } else if (name == "fibonacci_recursive") {
+        bench_fibonacci_recursive_native();
+    } else if (name == "float2string") {
+        bench_float2string_native();
+    } else if (name == "mandelbrot") {
+        bench_mandelbrot_native();
+    } else if (name == "n_bodies") {
+        bench_n_bodies_native();
+    } else if (name == "native_loop") {
+        bench_native_loop_native();
+    } else if (name == "particles_kinematics") {
+        bench_particles_kinematics_native();
+    } else if (name == "primes_loop") {
+        bench_primes_loop_native();
+    } else if (name == "queen") {
+        bench_queen_native();
+    } else if (name == "sha256") {
+        bench_sha256_native();
+    } else if (name == "sort") {
+        bench_sort_native();
+    } else if (name == "spectral_norm") {
+        bench_spectral_norm_native();
+    } else if (name == "string2float") {
+        bench_string2float_native();
+    } else if (name == "tree") {
+        bench_tree_native();
+    } else {
+        return false;
+    }
+    return true;
+}
+
 }  // namespace slc

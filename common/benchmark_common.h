@@ -21,13 +21,22 @@ struct BenchmarkItem {
 
 inline const std::vector<BenchmarkItem> &benchmark_items() {
     static const std::vector<BenchmarkItem> items = {
-        {"arithmetic_mix", 12},
+        {"dictionary", 10},
+        {"exp_loop", 8},
         {"fibonacci_loop", 14},
         {"fibonacci_recursive", 8},
+        {"float2string", 8},
         {"mandelbrot", 8},
+        {"n_bodies", 12},
+        {"native_loop", 8},
+        {"particles_kinematics", 10},
         {"primes_loop", 10},
         {"queen", 8},
+        {"sha256", 8},
         {"sort", 10},
+        {"spectral_norm", 8},
+        {"string2float", 8},
+        {"tree", 8},
     };
     return items;
 }

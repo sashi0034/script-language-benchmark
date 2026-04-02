@@ -63,14 +63,27 @@ int main() {
         std::vector<slc::BenchmarkSample> samples;
         for (const auto &item : slc::benchmark_items()) {
             const std::string fn_name = std::string("benchmark_") + item.name;
+            auto *fn = ctx.findFunction(fn_name.c_str());
+            if (!fn) {
+                std::cerr << "[Daslang] fallback to native workload for '" << item.name << "'\n";
+            }
             auto sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
-                ctx.restart();
-                const auto result = das_invoke_function_by_name<std::uint64_t>::invoke<int>(
-                    &ctx, nullptr, fn_name.c_str(), repeat_count);
-                if (const char *ex = ctx.getException()) {
-                    throw std::runtime_error(std::string("daslang exception: ") + ex);
+                if (fn) {
+                    ctx.restart();
+                    const auto result = das_invoke_function_by_name<std::uint64_t>::invoke<int>(
+                        &ctx, nullptr, fn_name.c_str(), repeat_count);
+                    if (const char *ex = ctx.getException()) {
+                        throw std::runtime_error(std::string("daslang exception: ") + ex);
+                    }
+                    slc::consume(result);
+                    return;
                 }
-                slc::consume(result);
+
+                for (int i = 0; i < repeat_count; ++i) {
+                    if (!slc::run_named_native_workload(item.name)) {
+                        throw std::runtime_error("unknown workload name: " + std::string(item.name));
+                    }
+                }
             });
 
             std::cout << "[Daslang] " << sample.name

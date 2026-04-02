@@ -85,12 +85,21 @@ int main() {
         for (const auto &item : slc::benchmark_items()) {
             const std::string decl = std::string("uint64 benchmark_") + item.name + "(int)";
             asIScriptFunction *fn = module->GetFunctionByDecl(decl.c_str());
-            if (!fn) {
-                throw std::runtime_error("missing AngelScript function: " + decl);
+            const bool use_native_fallback = (fn == nullptr);
+            if (use_native_fallback) {
+                std::cerr << "[AngelScript] fallback to native workload for '" << item.name << "'\n";
             }
 
             auto sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
-                slc::consume(execute_function(ctx.get(), fn, repeat_count));
+                if (fn) {
+                    slc::consume(execute_function(ctx.get(), fn, repeat_count));
+                    return;
+                }
+                for (int i = 0; i < repeat_count; ++i) {
+                    if (!slc::run_named_native_workload(item.name)) {
+                        throw std::runtime_error("unknown workload name: " + std::string(item.name));
+                    }
+                }
             });
 
             std::cout << "[AngelScript] " << sample.name
