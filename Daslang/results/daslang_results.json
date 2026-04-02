@@ -2,53 +2,116 @@
   "runtime": "Daslang",
   "items": [
     {
-      "name": "arithmetic_mix",
-      "repeat_count": 12,
-      "best_ms": 125.436,
-      "median_ms": 126.640,
-      "runs_ms": [127.537, 125.436, 126.640, 125.735, 129.946]
+      "name": "dictionary",
+      "repeat_count": 10,
+      "best_ms": 1.141,
+      "median_ms": 1.167,
+      "runs_ms": [1.186, 1.152, 1.167, 1.141, 1.264]
+    },
+    {
+      "name": "exp_loop",
+      "repeat_count": 8,
+      "best_ms": 1.116,
+      "median_ms": 1.130,
+      "runs_ms": [1.138, 1.135, 1.129, 1.116, 1.130]
     },
     {
       "name": "fibonacci_loop",
       "repeat_count": 14,
-      "best_ms": 20.554,
-      "median_ms": 20.878,
-      "runs_ms": [21.078, 20.714, 20.554, 20.878, 20.967]
+      "best_ms": 18.800,
+      "median_ms": 19.355,
+      "runs_ms": [19.845, 19.355, 18.800, 18.833, 19.501]
     },
     {
       "name": "fibonacci_recursive",
       "repeat_count": 8,
-      "best_ms": 272.921,
-      "median_ms": 275.505,
-      "runs_ms": [275.505, 272.921, 275.474, 277.865, 279.358]
+      "best_ms": 267.801,
+      "median_ms": 274.750,
+      "runs_ms": [267.801, 275.236, 268.699, 280.385, 274.750]
+    },
+    {
+      "name": "float2string",
+      "repeat_count": 8,
+      "best_ms": 19.399,
+      "median_ms": 19.542,
+      "runs_ms": [19.728, 19.634, 19.516, 19.399, 19.542]
     },
     {
       "name": "mandelbrot",
       "repeat_count": 8,
-      "best_ms": 31.971,
-      "median_ms": 32.324,
-      "runs_ms": [32.053, 32.700, 32.668, 31.971, 32.324]
+      "best_ms": 32.655,
+      "median_ms": 32.764,
+      "runs_ms": [32.683, 32.764, 33.141, 32.655, 32.817]
+    },
+    {
+      "name": "n_bodies",
+      "repeat_count": 12,
+      "best_ms": 0.222,
+      "median_ms": 0.222,
+      "runs_ms": [0.222, 0.222, 0.222, 0.222, 0.222]
+    },
+    {
+      "name": "native_loop",
+      "repeat_count": 8,
+      "best_ms": 8.898,
+      "median_ms": 8.925,
+      "runs_ms": [8.898, 8.925, 8.933, 8.908, 9.065]
+    },
+    {
+      "name": "particles_kinematics",
+      "repeat_count": 10,
+      "best_ms": 6.746,
+      "median_ms": 6.840,
+      "runs_ms": [7.099, 6.766, 6.746, 6.931, 6.840]
     },
     {
       "name": "primes_loop",
       "repeat_count": 10,
-      "best_ms": 8.971,
-      "median_ms": 9.193,
-      "runs_ms": [9.193, 9.590, 8.971, 9.610, 8.981]
+      "best_ms": 8.299,
+      "median_ms": 8.346,
+      "runs_ms": [8.299, 8.342, 8.357, 8.346, 8.417]
     },
     {
       "name": "queen",
       "repeat_count": 8,
-      "best_ms": 134.626,
-      "median_ms": 140.981,
-      "runs_ms": [136.277, 151.462, 140.981, 134.626, 147.369]
+      "best_ms": 131.942,
+      "median_ms": 132.297,
+      "runs_ms": [132.430, 132.083, 132.953, 131.942, 132.297]
+    },
+    {
+      "name": "sha256",
+      "repeat_count": 8,
+      "best_ms": 4.311,
+      "median_ms": 4.345,
+      "runs_ms": [4.311, 4.388, 4.367, 4.325, 4.345]
     },
     {
       "name": "sort",
       "repeat_count": 10,
-      "best_ms": 108.345,
-      "median_ms": 109.554,
-      "runs_ms": [114.640, 108.345, 121.293, 109.554, 108.971]
+      "best_ms": 105.581,
+      "median_ms": 106.780,
+      "runs_ms": [106.780, 105.581, 109.026, 109.088, 106.659]
+    },
+    {
+      "name": "spectral_norm",
+      "repeat_count": 8,
+      "best_ms": 3.781,
+      "median_ms": 3.783,
+      "runs_ms": [3.783, 3.781, 3.988, 3.787, 3.783]
+    },
+    {
+      "name": "string2float",
+      "repeat_count": 8,
+      "best_ms": 35.647,
+      "median_ms": 35.737,
+      "runs_ms": [42.044, 36.221, 35.737, 35.715, 35.647]
+    },
+    {
+      "name": "tree",
+      "repeat_count": 8,
+      "best_ms": 4.960,
+      "median_ms": 5.057,
+      "runs_ms": [4.960, 5.033, 5.101, 5.057, 5.125]
     }
   ]
 }

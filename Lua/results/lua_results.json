@@ -4,114 +4,114 @@
     {
       "name": "dictionary",
       "repeat_count": 10,
-      "best_ms": 6.854,
-      "median_ms": 6.979,
-      "runs_ms": [7.110, 6.979, 7.060, 6.854, 6.861]
+      "best_ms": 4.075,
+      "median_ms": 4.113,
+      "runs_ms": [4.113, 4.299, 4.097, 4.075, 4.188]
     },
     {
       "name": "exp_loop",
       "repeat_count": 8,
-      "best_ms": 17.552,
-      "median_ms": 18.124,
-      "runs_ms": [19.053, 18.124, 19.024, 17.884, 17.552]
+      "best_ms": 9.299,
+      "median_ms": 9.563,
+      "runs_ms": [9.563, 9.299, 9.547, 9.580, 9.604]
     },
     {
       "name": "fibonacci_loop",
       "repeat_count": 14,
-      "best_ms": 41.278,
-      "median_ms": 41.539,
-      "runs_ms": [41.759, 41.278, 41.539, 41.444, 42.220]
+      "best_ms": 26.635,
+      "median_ms": 26.835,
+      "runs_ms": [27.849, 26.767, 26.635, 28.483, 26.835]
     },
     {
       "name": "fibonacci_recursive",
       "repeat_count": 8,
-      "best_ms": 1319.226,
-      "median_ms": 1325.025,
-      "runs_ms": [1319.565, 1326.926, 1329.912, 1319.226, 1325.025]
+      "best_ms": 594.760,
+      "median_ms": 598.160,
+      "runs_ms": [599.106, 601.078, 596.749, 594.760, 598.160]
     },
     {
       "name": "float2string",
       "repeat_count": 8,
-      "best_ms": 80.273,
-      "median_ms": 80.593,
-      "runs_ms": [82.620, 80.593, 80.294, 80.273, 80.747]
+      "best_ms": 41.554,
+      "median_ms": 41.752,
+      "runs_ms": [41.906, 41.554, 41.607, 41.752, 41.890]
     },
     {
       "name": "mandelbrot",
       "repeat_count": 8,
-      "best_ms": 86.584,
-      "median_ms": 87.181,
-      "runs_ms": [88.591, 88.036, 86.886, 86.584, 87.181]
+      "best_ms": 47.323,
+      "median_ms": 48.028,
+      "runs_ms": [47.323, 47.414, 48.028, 49.849, 49.152]
     },
     {
       "name": "n_bodies",
       "repeat_count": 12,
-      "best_ms": 0.442,
-      "median_ms": 0.453,
-      "runs_ms": [0.453, 0.442, 0.442, 0.453, 0.466]
+      "best_ms": 0.222,
+      "median_ms": 0.222,
+      "runs_ms": [0.222, 0.222, 0.222, 0.223, 0.222]
     },
     {
       "name": "native_loop",
       "repeat_count": 8,
-      "best_ms": 542.574,
-      "median_ms": 556.230,
-      "runs_ms": [542.574, 556.230, 557.082, 558.721, 554.760]
+      "best_ms": 299.273,
+      "median_ms": 305.421,
+      "runs_ms": [305.421, 303.764, 306.697, 308.417, 299.273]
     },
     {
       "name": "particles_kinematics",
       "repeat_count": 10,
-      "best_ms": 10.498,
-      "median_ms": 10.509,
-      "runs_ms": [10.500, 10.498, 10.615, 10.809, 10.509]
+      "best_ms": 6.579,
+      "median_ms": 6.598,
+      "runs_ms": [6.595, 6.579, 6.739, 6.598, 6.767]
     },
     {
       "name": "primes_loop",
       "repeat_count": 10,
-      "best_ms": 22.477,
-      "median_ms": 22.638,
-      "runs_ms": [22.573, 22.477, 22.638, 23.717, 22.712]
+      "best_ms": 13.688,
+      "median_ms": 14.072,
+      "runs_ms": [13.688, 13.857, 15.366, 14.250, 14.072]
     },
     {
       "name": "queen",
       "repeat_count": 8,
-      "best_ms": 366.767,
-      "median_ms": 369.134,
-      "runs_ms": [371.665, 370.137, 366.767, 369.134, 366.914]
+      "best_ms": 208.232,
+      "median_ms": 213.792,
+      "runs_ms": [208.232, 211.558, 213.792, 222.183, 233.494]
     },
     {
       "name": "sha256",
       "repeat_count": 8,
-      "best_ms": 6.678,
-      "median_ms": 6.756,
-      "runs_ms": [6.678, 6.756, 6.769, 6.828, 6.727]
+      "best_ms": 4.134,
+      "median_ms": 4.183,
+      "runs_ms": [4.183, 4.134, 4.300, 4.187, 4.155]
     },
     {
       "name": "sort",
       "repeat_count": 10,
-      "best_ms": 7.280,
-      "median_ms": 7.420,
-      "runs_ms": [7.282, 7.423, 7.420, 7.280, 7.471]
+      "best_ms": 4.122,
+      "median_ms": 4.181,
+      "runs_ms": [4.191, 4.134, 4.122, 5.064, 4.181]
     },
     {
       "name": "spectral_norm",
       "repeat_count": 8,
-      "best_ms": 7.945,
-      "median_ms": 8.092,
-      "runs_ms": [8.930, 7.945, 8.505, 8.092, 7.981]
+      "best_ms": 3.779,
+      "median_ms": 3.790,
+      "runs_ms": [3.779, 3.846, 3.794, 3.788, 3.790]
     },
     {
       "name": "string2float",
       "repeat_count": 8,
-      "best_ms": 79.956,
-      "median_ms": 83.204,
-      "runs_ms": [83.595, 88.630, 83.204, 79.984, 79.956]
+      "best_ms": 48.801,
+      "median_ms": 49.608,
+      "runs_ms": [49.608, 50.230, 55.218, 48.801, 49.151]
     },
     {
       "name": "tree",
       "repeat_count": 8,
-      "best_ms": 48.919,
-      "median_ms": 51.012,
-      "runs_ms": [48.919, 51.012, 50.744, 52.584, 55.383]
+      "best_ms": 29.998,
+      "median_ms": 31.105,
+      "runs_ms": [33.978, 31.105, 30.349, 29.998, 31.698]
     }
   ]
 }

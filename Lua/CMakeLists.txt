@@ -32,8 +32,10 @@ target_include_directories(lua_benchmark PRIVATE
 target_compile_definitions(lua_benchmark PRIVATE
     SLC_PROJECT_ROOT="${CMAKE_CURRENT_SOURCE_DIR}"
 )
-target_link_libraries(lua_benchmark PRIVATE lua_runtime m)
+target_link_libraries(lua_benchmark PRIVATE lua_runtime)
 
 if(WIN32)
     target_link_libraries(lua_benchmark PRIVATE ws2_32)
+else()
+    target_link_libraries(lua_benchmark PRIVATE m)
 endif()
