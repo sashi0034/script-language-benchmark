@@ -20,12 +20,19 @@ add_executable(angelscript_benchmark
     src/main.cpp
     "${ANGELSCRIPT_ROOT}/add_on/scriptarray/scriptarray.cpp"
     "${ANGELSCRIPT_ROOT}/add_on/scriptbuilder/scriptbuilder.cpp"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptstdstring/scriptstdstring.cpp"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptstdstring/scriptstdstring_utils.cpp"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptdictionary/scriptdictionary.cpp"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptmath/scriptmath.cpp"
 )
 
 target_include_directories(angelscript_benchmark PRIVATE
     "${ANGELSCRIPT_ROOT}/angelscript/include"
     "${ANGELSCRIPT_ROOT}/add_on/scriptarray"
     "${ANGELSCRIPT_ROOT}/add_on/scriptbuilder"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptstdstring"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptdictionary"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptmath"
     "${CMAKE_CURRENT_SOURCE_DIR}/.."
 )
 

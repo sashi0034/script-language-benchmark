@@ -1,4 +1,8 @@
-﻿# AngelScript VM 内部分析レポート（Lua / Daslang との比較）
+﻿Daslang は通常 AOT ではなくインタプリタで実行されるのでは、AI の主張はかなり間違ってそう。
+
+---
+
+# AngelScript VM 内部分析レポート（Lua / Daslang との比較）
 
 ## 1. ベンチマークで見える差分
 - 16 個の workloads をすべて同一の harness で回した最新版リポートでは、AngelScript が `fibonacci_` 系、`queen`、`primes_loop`、`sort` 周りで Daslang や Lua に比べて 2〜10 倍の遅延を示している一方、`float2string` や `particles_kinematics` のような native に近いループでは優位に立てていることがわかる。[benchmark_report.md](C:\dev\lang\script-language-benchmarks\benchmark_report.md:23-40)
