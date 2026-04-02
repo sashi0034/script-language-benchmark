@@ -12,52 +12,33 @@
   - [AngelScript results](/C:/dev/lang/script-language-comparison/AngelScript/results/angelscript_results.json)
   - [Daslang results](/C:/dev/lang/script-language-comparison/Daslang/results/daslang_results.json)
 
-The current harness measures runtime overhead through an embedded C++ host. Each benchmark item is implemented as a shared native workload, and the script side repeatedly invokes that workload in a loop. This keeps the workload identical across both runtimes, but it means the numbers reflect embedded runtime call/dispatch overhead plus loop overhead, not a pure "all logic written in script" benchmark.
+The current harness is script-centric. The benchmark logic now lives in [AngelScript/scripts/bench.as](/C:/dev/lang/script-language-comparison/AngelScript/scripts/bench.as) and [Daslang/scripts/bench.das](/C:/dev/lang/script-language-comparison/Daslang/scripts/bench.das), with the C++ host only compiling the script, invoking exported functions, timing them, and mixing each returned checksum into the shared sink. This makes the comparison much closer to "same algorithm written in each scripting language" rather than "script loop calling native C++ work."
 
 ## Result Table
 
 | item | AngelScript best ms | Daslang best ms | winner |
 | --- | ---: | ---: | --- |
-| dictionary | 1.688 | 1.312 | Daslang |
-| exp loop | 1.457 | 1.367 | Daslang |
-| fibonacci loop | 0.856 | 0.768 | Daslang |
-| fibonacci recursive | 34.970 | 32.335 | Daslang |
-| float2string | 22.882 | 24.507 | AngelScript |
-| mandelbrot | 3.505 | 3.757 | AngelScript |
-| n-bodies | 0.178 | 0.193 | AngelScript |
-| native loop | 10.765 | 11.615 | AngelScript |
-| particles kinematics | 6.450 | 6.986 | AngelScript |
-| primes loop | 0.690 | 0.736 | AngelScript |
-| queen | 35.051 | 39.966 | AngelScript |
-| sha256 | 3.909 | 4.442 | AngelScript |
-| sort | 4.392 | 4.688 | AngelScript |
-| spectral norm | 3.786 | 3.893 | AngelScript |
-| string2float | 42.761 | 43.527 | AngelScript |
-| tree | 5.054 | 5.538 | AngelScript |
+| arithmetic mix | 216.667 | 125.436 | Daslang |
+| fibonacci loop | 54.184 | 20.554 | Daslang |
+| fibonacci recursive | 765.497 | 272.921 | Daslang |
+| mandelbrot | 58.253 | 31.971 | Daslang |
+| primes loop | 28.351 | 8.971 | Daslang |
+| queen | 254.830 | 134.626 | Daslang |
+| sort | 335.327 | 108.345 | Daslang |
 
 ## Takeaways
 
 - Win count:
-  - AngelScript: 12
-  - Daslang: 4
-- Geometric mean of `AngelScript / Daslang` best-time ratio: `0.975`
-  - On this harness, AngelScript was about `2.5%` faster overall.
-- Daslang was better on:
-  - `dictionary`
-  - `exp loop`
-  - `fibonacci loop`
-  - `fibonacci recursive`
-- AngelScript was better on the remaining 12 items, especially:
-  - `queen`
-  - `sha256`
-  - `tree`
-  - `particles kinematics`
+  - AngelScript: 0
+  - Daslang: 7
+- This revised harness is not directly comparable to the old report, because the workload has shifted from native C++ functions to script-authored algorithms.
+- The new set focuses on script-executed control flow, recursion, array manipulation, sieve/sort logic, and numeric iteration.
+- Both runtimes produced the same final sink value, which is a useful sanity check that the benchmarked logic is semantically aligned.
 
 ## Project Files
 
-- Shared workload and JSON writer:
+- Shared timing harness and JSON writer:
   - [common/benchmark_common.h](/C:/dev/lang/script-language-comparison/common/benchmark_common.h)
-  - [common/benchmark_workloads.h](/C:/dev/lang/script-language-comparison/common/benchmark_workloads.h)
 - AngelScript runner:
   - [AngelScript/CMakeLists.txt](/C:/dev/lang/script-language-comparison/AngelScript/CMakeLists.txt)
   - [AngelScript/src/main.cpp](/C:/dev/lang/script-language-comparison/AngelScript/src/main.cpp)
@@ -69,5 +50,5 @@ The current harness measures runtime overhead through an embedded C++ host. Each
 
 ## Notes
 
-- `Daslang` build emitted MSVC `C4819` warnings from vendored headers, but the benchmark executable built and ran successfully.
-- If you want the next step to be a more script-heavy comparison, we should move more of each workload from C++ into each script language and keep only the minimum host bindings.
+- `Daslang` build still emits MSVC `C4819` warnings from vendored headers, but the benchmark executable built and ran successfully.
+- The script workloads intentionally take a runtime seed per repeat to avoid aggressive constant folding and to keep the measured work on the script side.

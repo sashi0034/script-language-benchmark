@@ -2,116 +2,53 @@
   "runtime": "Daslang",
   "items": [
     {
-      "name": "dictionary",
+      "name": "arithmetic_mix",
       "repeat_count": 12,
-      "best_ms": 1.312,
-      "median_ms": 1.329,
-      "runs_ms": [1.333, 1.312, 1.329, 1.314, 1.573]
-    },
-    {
-      "name": "exp_loop",
-      "repeat_count": 10,
-      "best_ms": 1.367,
-      "median_ms": 1.375,
-      "runs_ms": [1.375, 1.403, 1.382, 1.367, 1.367]
+      "best_ms": 125.436,
+      "median_ms": 126.640,
+      "runs_ms": [127.537, 125.436, 126.640, 125.735, 129.946]
     },
     {
       "name": "fibonacci_loop",
       "repeat_count": 14,
-      "best_ms": 0.768,
-      "median_ms": 0.786,
-      "runs_ms": [0.768, 0.799, 0.794, 0.784, 0.786]
+      "best_ms": 20.554,
+      "median_ms": 20.878,
+      "runs_ms": [21.078, 20.714, 20.554, 20.878, 20.967]
     },
     {
       "name": "fibonacci_recursive",
       "repeat_count": 8,
-      "best_ms": 32.335,
-      "median_ms": 32.776,
-      "runs_ms": [32.776, 33.255, 32.961, 32.335, 32.764]
-    },
-    {
-      "name": "float2string",
-      "repeat_count": 10,
-      "best_ms": 24.507,
-      "median_ms": 24.780,
-      "runs_ms": [24.788, 24.780, 24.507, 24.730, 25.575]
+      "best_ms": 272.921,
+      "median_ms": 275.505,
+      "runs_ms": [275.505, 272.921, 275.474, 277.865, 279.358]
     },
     {
       "name": "mandelbrot",
       "repeat_count": 8,
-      "best_ms": 3.757,
-      "median_ms": 3.793,
-      "runs_ms": [3.887, 3.958, 3.778, 3.793, 3.757]
-    },
-    {
-      "name": "n_bodies",
-      "repeat_count": 10,
-      "best_ms": 0.193,
-      "median_ms": 0.193,
-      "runs_ms": [0.193, 0.195, 0.193, 0.193, 0.193]
-    },
-    {
-      "name": "native_loop",
-      "repeat_count": 10,
-      "best_ms": 11.615,
-      "median_ms": 11.671,
-      "runs_ms": [11.666, 11.615, 11.671, 12.133, 11.780]
-    },
-    {
-      "name": "particles_kinematics",
-      "repeat_count": 10,
-      "best_ms": 6.986,
-      "median_ms": 7.164,
-      "runs_ms": [6.986, 7.232, 7.164, 7.247, 7.012]
+      "best_ms": 31.971,
+      "median_ms": 32.324,
+      "runs_ms": [32.053, 32.700, 32.668, 31.971, 32.324]
     },
     {
       "name": "primes_loop",
       "repeat_count": 10,
-      "best_ms": 0.736,
-      "median_ms": 0.737,
-      "runs_ms": [0.736, 0.737, 0.754, 0.736, 0.743]
+      "best_ms": 8.971,
+      "median_ms": 9.193,
+      "runs_ms": [9.193, 9.590, 8.971, 9.610, 8.981]
     },
     {
       "name": "queen",
       "repeat_count": 8,
-      "best_ms": 39.966,
-      "median_ms": 40.587,
-      "runs_ms": [40.633, 40.588, 39.966, 40.434, 40.587]
-    },
-    {
-      "name": "sha256",
-      "repeat_count": 8,
-      "best_ms": 4.442,
-      "median_ms": 4.596,
-      "runs_ms": [4.442, 4.656, 4.596, 4.620, 4.567]
+      "best_ms": 134.626,
+      "median_ms": 140.981,
+      "runs_ms": [136.277, 151.462, 140.981, 134.626, 147.369]
     },
     {
       "name": "sort",
       "repeat_count": 10,
-      "best_ms": 4.688,
-      "median_ms": 4.720,
-      "runs_ms": [4.720, 4.755, 4.709, 4.745, 4.688]
-    },
-    {
-      "name": "spectral_norm",
-      "repeat_count": 8,
-      "best_ms": 3.893,
-      "median_ms": 3.912,
-      "runs_ms": [3.971, 3.912, 3.901, 3.964, 3.893]
-    },
-    {
-      "name": "string2float",
-      "repeat_count": 10,
-      "best_ms": 43.527,
-      "median_ms": 43.833,
-      "runs_ms": [45.166, 43.527, 44.208, 43.833, 43.548]
-    },
-    {
-      "name": "tree",
-      "repeat_count": 8,
-      "best_ms": 5.538,
-      "median_ms": 6.036,
-      "runs_ms": [5.538, 5.664, 6.530, 6.036, 6.344]
+      "best_ms": 108.345,
+      "median_ms": 109.554,
+      "runs_ms": [114.640, 108.345, 121.293, 109.554, 108.971]
     }
   ]
 }

@@ -18,11 +18,13 @@ add_subdirectory(
 
 add_executable(angelscript_benchmark
     src/main.cpp
+    "${ANGELSCRIPT_ROOT}/add_on/scriptarray/scriptarray.cpp"
     "${ANGELSCRIPT_ROOT}/add_on/scriptbuilder/scriptbuilder.cpp"
 )
 
 target_include_directories(angelscript_benchmark PRIVATE
     "${ANGELSCRIPT_ROOT}/angelscript/include"
+    "${ANGELSCRIPT_ROOT}/add_on/scriptarray"
     "${ANGELSCRIPT_ROOT}/add_on/scriptbuilder"
     "${CMAKE_CURRENT_SOURCE_DIR}/.."
 )

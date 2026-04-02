@@ -1,6 +1,7 @@
 #include "../../common/benchmark_common.h"
 #include "../../common/benchmark_workloads.h"
 
+#include "../angelscript-2.38.0/sdk/add_on/scriptarray/scriptarray.h"
 #include "../angelscript-2.38.0/sdk/add_on/scriptbuilder/scriptbuilder.h"
 #include "../angelscript-2.38.0/sdk/angelscript/include/angelscript.h"
 
@@ -13,8 +14,6 @@
 #include <vector>
 
 namespace {
-
-using BenchFn = void (*)();
 
 void message_callback(const asSMessageInfo *msg, void *) {
     const char *type = "ERR";
@@ -34,19 +33,14 @@ void require(int result, const std::string &message) {
     }
 }
 
-void register_benchmark(asIScriptEngine *engine, const std::string &name, BenchFn fn) {
-    const std::string decl = "void " + name + "()";
-    require(engine->RegisterGlobalFunction(decl.c_str(), asFUNCTION(fn), asCALL_CDECL),
-            "failed to register AngelScript function " + name);
-}
-
-void execute_function(asIScriptContext *ctx, asIScriptFunction *fn, int repeat_count) {
+std::uint64_t execute_function(asIScriptContext *ctx, asIScriptFunction *fn, int repeat_count) {
     require(ctx->Prepare(fn), "failed to prepare AngelScript function");
     require(ctx->SetArgDWord(0, static_cast<asDWORD>(repeat_count)), "failed to set AngelScript arg");
     const int exec = ctx->Execute();
     if (exec != asEXECUTION_FINISHED) {
         throw std::runtime_error("AngelScript execution failed with code " + std::to_string(exec));
     }
+    return static_cast<std::uint64_t>(ctx->GetReturnQWord());
 }
 
 }  // namespace
@@ -63,25 +57,9 @@ int main() {
     }
 
     engine->SetMessageCallback(asFUNCTION(message_callback), nullptr, asCALL_CDECL);
+    RegisterScriptArray(engine, true);
 
     try {
-        register_benchmark(engine, "bench_dictionary", &slc::bench_dictionary_native);
-        register_benchmark(engine, "bench_exp_loop", &slc::bench_exp_loop_native);
-        register_benchmark(engine, "bench_fibonacci_loop", &slc::bench_fibonacci_loop_native);
-        register_benchmark(engine, "bench_fibonacci_recursive", &slc::bench_fibonacci_recursive_native);
-        register_benchmark(engine, "bench_float2string", &slc::bench_float2string_native);
-        register_benchmark(engine, "bench_mandelbrot", &slc::bench_mandelbrot_native);
-        register_benchmark(engine, "bench_n_bodies", &slc::bench_n_bodies_native);
-        register_benchmark(engine, "bench_native_loop", &slc::bench_native_loop_native);
-        register_benchmark(engine, "bench_particles_kinematics", &slc::bench_particles_kinematics_native);
-        register_benchmark(engine, "bench_primes_loop", &slc::bench_primes_loop_native);
-        register_benchmark(engine, "bench_queen", &slc::bench_queen_native);
-        register_benchmark(engine, "bench_sha256", &slc::bench_sha256_native);
-        register_benchmark(engine, "bench_sort", &slc::bench_sort_native);
-        register_benchmark(engine, "bench_spectral_norm", &slc::bench_spectral_norm_native);
-        register_benchmark(engine, "bench_string2float", &slc::bench_string2float_native);
-        register_benchmark(engine, "bench_tree", &slc::bench_tree_native);
-
         CScriptBuilder builder;
         require(builder.StartNewModule(engine, "bench"), "failed to create AngelScript module");
         require(builder.AddSectionFromFile(script_path.string().c_str()), "failed to add AngelScript script");
@@ -105,14 +83,14 @@ int main() {
 
         std::vector<slc::BenchmarkSample> samples;
         for (const auto &item : slc::benchmark_items()) {
-            const std::string decl = std::string("void benchmark_") + item.name + "(int)";
+            const std::string decl = std::string("uint64 benchmark_") + item.name + "(int)";
             asIScriptFunction *fn = module->GetFunctionByDecl(decl.c_str());
             if (!fn) {
                 throw std::runtime_error("missing AngelScript function: " + decl);
             }
 
             auto sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
-                execute_function(ctx.get(), fn, repeat_count);
+                slc::consume(execute_function(ctx.get(), fn, repeat_count));
             });
 
             std::cout << "[AngelScript] " << sample.name

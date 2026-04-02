@@ -4,6 +4,7 @@
 #include "../vendor/daScript/include/daScript/ast/ast.h"
 #include "../vendor/daScript/include/daScript/ast/ast_interop.h"
 #include "../vendor/daScript/include/daScript/daScript.h"
+#include "../vendor/daScript/include/daScript/simulate/aot.h"
 
 #include <filesystem>
 #include <iostream>
@@ -12,33 +13,6 @@
 #include <vector>
 
 using namespace das;
-
-class Module_Benchmark : public Module {
-public:
-    Module_Benchmark() : Module("benchmark") {
-        ModuleLibrary lib(this);
-        lib.addBuiltInModule();
-
-        addExtern<DAS_BIND_FUN(slc::bench_dictionary_native)>(*this, lib, "bench_dictionary", SideEffects::modifyExternal, "bench_dictionary");
-        addExtern<DAS_BIND_FUN(slc::bench_exp_loop_native)>(*this, lib, "bench_exp_loop", SideEffects::modifyExternal, "bench_exp_loop");
-        addExtern<DAS_BIND_FUN(slc::bench_fibonacci_loop_native)>(*this, lib, "bench_fibonacci_loop", SideEffects::modifyExternal, "bench_fibonacci_loop");
-        addExtern<DAS_BIND_FUN(slc::bench_fibonacci_recursive_native)>(*this, lib, "bench_fibonacci_recursive", SideEffects::modifyExternal, "bench_fibonacci_recursive");
-        addExtern<DAS_BIND_FUN(slc::bench_float2string_native)>(*this, lib, "bench_float2string", SideEffects::modifyExternal, "bench_float2string");
-        addExtern<DAS_BIND_FUN(slc::bench_mandelbrot_native)>(*this, lib, "bench_mandelbrot", SideEffects::modifyExternal, "bench_mandelbrot");
-        addExtern<DAS_BIND_FUN(slc::bench_n_bodies_native)>(*this, lib, "bench_n_bodies", SideEffects::modifyExternal, "bench_n_bodies");
-        addExtern<DAS_BIND_FUN(slc::bench_native_loop_native)>(*this, lib, "bench_native_loop", SideEffects::modifyExternal, "bench_native_loop");
-        addExtern<DAS_BIND_FUN(slc::bench_particles_kinematics_native)>(*this, lib, "bench_particles_kinematics", SideEffects::modifyExternal, "bench_particles_kinematics");
-        addExtern<DAS_BIND_FUN(slc::bench_primes_loop_native)>(*this, lib, "bench_primes_loop", SideEffects::modifyExternal, "bench_primes_loop");
-        addExtern<DAS_BIND_FUN(slc::bench_queen_native)>(*this, lib, "bench_queen", SideEffects::modifyExternal, "bench_queen");
-        addExtern<DAS_BIND_FUN(slc::bench_sha256_native)>(*this, lib, "bench_sha256", SideEffects::modifyExternal, "bench_sha256");
-        addExtern<DAS_BIND_FUN(slc::bench_sort_native)>(*this, lib, "bench_sort", SideEffects::modifyExternal, "bench_sort");
-        addExtern<DAS_BIND_FUN(slc::bench_spectral_norm_native)>(*this, lib, "bench_spectral_norm", SideEffects::modifyExternal, "bench_spectral_norm");
-        addExtern<DAS_BIND_FUN(slc::bench_string2float_native)>(*this, lib, "bench_string2float", SideEffects::modifyExternal, "bench_string2float");
-        addExtern<DAS_BIND_FUN(slc::bench_tree_native)>(*this, lib, "bench_tree", SideEffects::modifyExternal, "bench_tree");
-    }
-};
-
-REGISTER_MODULE(Module_Benchmark);
 
 namespace {
 
@@ -64,7 +38,6 @@ int main() {
     try {
         setDasRoot(das_root.string());
         register_builtin_modules();
-        register_Module_Benchmark();
         Module::Initialize();
         std::cerr << "[Daslang] module init ok\n";
 
@@ -92,10 +65,12 @@ int main() {
             const std::string fn_name = std::string("benchmark_") + item.name;
             auto sample = slc::run_benchmark_sample(item, [&](int repeat_count) {
                 ctx.restart();
-                das_invoke_function_by_name<void>::invoke<int>(&ctx, nullptr, fn_name.c_str(), repeat_count);
+                const auto result = das_invoke_function_by_name<std::uint64_t>::invoke<int>(
+                    &ctx, nullptr, fn_name.c_str(), repeat_count);
                 if (const char *ex = ctx.getException()) {
                     throw std::runtime_error(std::string("daslang exception: ") + ex);
                 }
+                slc::consume(result);
             });
 
             std::cout << "[Daslang] " << sample.name
