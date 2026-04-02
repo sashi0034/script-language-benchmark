@@ -1,0 +1,17 @@
+
+- dictionary
+- exp loop
+- fibonacci loop
+- fibonacci recursive
+- float2string
+- mandelbrot
+- n-bodies
+- native loop
+- particles kinematics
+- primes loop
+- queen
+- sha256
+- sort
+- spectral norm
+- string2float
+- tree
