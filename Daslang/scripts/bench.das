@@ -36,6 +36,77 @@ def solve_queen_impl(row : int; n : int; cols : int; diag1 : int; diag2 : int) :
     return solutions
 }
 
+def splitmix64(x : uint64) : uint64 {
+    var y = x
+    y += uint64(0x9e3779b97f4a7c15ull)
+    y = (y ^ (y >> uint64(30))) * uint64(0xbf58476d1ce4e5b9ull)
+    y = (y ^ (y >> uint64(27))) * uint64(0x94d049bb133111ebull)
+    y = y ^ (y >> uint64(31))
+    return y
+}
+
+def append_decimal_digits(target : array<uint8>; value : int) {
+    if (value == 0) {
+        target.insertLast(uint8(48));
+        return;
+    }
+    var digits : array<uint8>;
+    resize(digits, 0);
+    var temp = value;
+    while (temp != 0) {
+        digits.insertLast(uint8(uint(temp % 10) + uint(48)));
+        temp /= 10;
+    }
+    for (i in range(digits.length())) {
+        target.insertLast(digits[digits.length() - 1 - i]);
+    }
+}
+
+def format_decimal_text(value : double; precision : int) : array<uint8> {
+    var text : array<uint8>;
+    resize(text, 0);
+    var current = value;
+    if (current < 0.0) {
+        text.insertLast(uint8(45));
+        current = -current;
+    }
+    let integer_part = int(current);
+    append_decimal_digits(text, integer_part);
+    text.insertLast(uint8(46));
+    var fractional = current - double(integer_part);
+    for (i in range(precision)) {
+        fractional *= 10.0;
+        let digit = int(fractional) % 10;
+        text.insertLast(uint8(uint(digit) + uint(48)));
+        fractional -= double(digit);
+    }
+    return text;
+}
+
+def parse_double_from_text(text : array<uint8>) : double {
+    var index = 0;
+    var negative = false;
+    if (text.length() > 0 && text[0] == uint8(45)) {
+        negative = true;
+        index = 1;
+    }
+    var value = 0.0;
+    while (index < text.length() && text[index] != uint8(46)) {
+        value = value * 10.0 + double(int(text[index]) - 48);
+        index ++;
+    }
+    if (index < text.length() && text[index] == uint8(46)) {
+        index ++;
+        var place = 0.1;
+        while (index < text.length()) {
+            value += double(int(text[index]) - 48) * place;
+            place *= 0.1;
+            index ++;
+        }
+    }
+    return negative ? -value : value;
+}
+
 def work_arithmetic_mix(seed : int) : uint64 {
     var acc : uint64 = uint64(0)
     for (i in range(250000)) {
@@ -44,6 +115,46 @@ def work_arithmetic_mix(seed : int) : uint64 {
         acc = mix_checksum(acc, uint64(x) ^ (ii * uint64(3)) ^ (ii >> uint64(2)))
     }
     return acc
+}
+
+def work_dictionary(seed : int) : uint64 {
+    const int capacity = 4096;
+    var values : array<int>;
+    var present : array<int>;
+    resize(values, capacity);
+    resize(present, capacity);
+    for (i in range(capacity)) {
+        values[i] = 0;
+        present[i] = 0;
+    }
+    var size = 0;
+    for (i in range(3000)) {
+        let key = int(splitmix64(uint64(i)) & uint64(capacity - 1));
+        let value = int(i) ^ (key << 1);
+        if (present[key] == 0) {
+            size += 1;
+            present[key] = 1;
+        }
+        values[key] = value;
+    }
+    var acc : uint64 = uint64(0);
+    for (i in range(3000)) {
+        let key = int(splitmix64(uint64(i + 7000)) & uint64(capacity - 1));
+        if (present[key] != 0) {
+            acc += uint64(values[key]);
+        }
+    }
+    acc ^= uint64(size);
+    return mix_checksum(acc, uint64(seed));
+}
+
+def work_exp_loop(seed : int) : uint64 {
+    var sum : double = 0.0
+    for (i in range(1, 40001)) {
+        let x = double(((i + seed) % 2048) + 1) * 0.00075
+        sum += math.exp(x)
+    }
+    return mix_checksum(0, uint64(sum * 1000.0))
 }
 
 def work_fibonacci_loop(seed : int) : uint64 {
@@ -61,6 +172,19 @@ def work_fibonacci_loop(seed : int) : uint64 {
 
 def work_fibonacci_recursive(seed : int) : uint64 {
     return fib_recursive_impl(31 + (seed & 1))
+}
+
+def work_float2string(seed : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(12000)) {
+        let value = math.sin((i + seed) * 0.01) * 10000.0
+        var text = format_decimal_text(value, 9)
+        acc += uint64(text.length())
+        if (text.length() > 0) {
+            acc ^= uint64(text[0])
+        }
+    }
+    return mix_checksum(acc, uint64(seed))
 }
 
 def work_mandelbrot(seed : int) : uint64 {
@@ -84,6 +208,325 @@ def work_mandelbrot(seed : int) : uint64 {
         }
     }
     return acc
+}
+
+def work_n_bodies(seed : int) : uint64 {
+    let count = 5
+    var bodies : array<double>
+    resize(bodies, count * 7)
+    bodies[0] = 0.0
+    bodies[1] = 0.0
+    bodies[2] = 0.0
+    bodies[3] = 0.0
+    bodies[4] = 0.0
+    bodies[5] = 0.0
+    bodies[6] = 10.0
+
+    bodies[7] = 1.0
+    bodies[8] = 0.0
+    bodies[9] = 0.0
+    bodies[10] = 0.0
+    bodies[11] = 0.8
+    bodies[12] = 0.0
+    bodies[13] = 1.0
+
+    bodies[14] = -1.0
+    bodies[15] = 0.0
+    bodies[16] = 0.0
+    bodies[17] = 0.0
+    bodies[18] = -0.8
+    bodies[19] = 0.0
+    bodies[20] = 1.0
+
+    bodies[21] = 0.0
+    bodies[22] = 1.2
+    bodies[23] = 0.0
+    bodies[24] = -0.7
+    bodies[25] = 0.0
+    bodies[26] = 0.0
+    bodies[27] = 0.5
+
+    bodies[28] = 0.0
+    bodies[29] = -1.2
+    bodies[30] = 0.0
+    bodies[31] = 0.7
+    bodies[32] = 0.0
+    bodies[33] = 0.0
+    bodies[34] = 0.5
+
+    let dt = 0.01
+    for (step in range(400)) {
+        for (i in range(count)) {
+            let i_base = i * 7
+            for (j in range(i + 1, count)) {
+                let j_base = j * 7
+                let dx = bodies[j_base + 0] - bodies[i_base + 0]
+                let dy = bodies[j_base + 1] - bodies[i_base + 1]
+                let dz = bodies[j_base + 2] - bodies[i_base + 2]
+                let dist2 = dx * dx + dy * dy + dz * dz + 1e-9
+                let inv_dist = 1.0 / math.sqrt(dist2)
+                let inv_dist3 = inv_dist * inv_dist * inv_dist
+                let force = inv_dist3 * dt
+                let im = bodies[i_base + 6] * force
+                let jm = bodies[j_base + 6] * force
+                bodies[i_base + 3] += dx * jm
+                bodies[i_base + 4] += dy * jm
+                bodies[i_base + 5] += dz * jm
+                bodies[j_base + 3] -= dx * im
+                bodies[j_base + 4] -= dy * im
+                bodies[j_base + 5] -= dz * im
+            }
+        }
+        for (i in range(count)) {
+            let base = i * 7
+            bodies[base + 0] += bodies[base + 3] * dt
+            bodies[base + 1] += bodies[base + 4] * dt
+            bodies[base + 2] += bodies[base + 5] * dt
+        }
+    }
+
+    var acc : uint64 = uint64(0)
+    for (i in range(count)) {
+        let base = i * 7
+        acc ^= uint64((bodies[base + 0] + bodies[base + 1] + bodies[base + 2]) * 1000000.0)
+    }
+    return mix_checksum(acc, uint64(seed))
+}
+
+def work_native_loop(seed : int) : uint64 {
+    var acc : uint64 = uint64(seed)
+    for (i in range(4000000)) {
+        let value = uint64(uint64(i) * uint64(3)) ^ uint64(uint64(i) >> uint64(2))
+        acc += value
+    }
+    return acc
+}
+
+def work_particles_kinematics(seed : int) : uint64 {
+    let count = 6000
+    var particles : array<double>
+    resize(particles, count * 6)
+    for (i in range(count)) {
+        let base = i * 6
+        particles[base + 0] = math.sin(double(i) * 0.1)
+        particles[base + 1] = math.cos(double(i) * 0.2)
+        particles[base + 2] = math.sin(double(i) * 0.3)
+        particles[base + 3] = double(i % 7) * 0.01
+        particles[base + 4] = double(i % 11) * 0.015
+        particles[base + 5] = double(i % 13) * 0.02
+    }
+    for (step in range(100)) {
+        for (i in range(count)) {
+            let base = i * 6
+            particles[base + 3] += -particles[base + 0] * 0.0003
+            particles[base + 4] += -particles[base + 1] * 0.0002
+            particles[base + 5] += -particles[base + 2] * 0.0004
+            particles[base + 0] += particles[base + 3]
+            particles[base + 1] += particles[base + 4]
+            particles[base + 2] += particles[base + 5]
+        }
+    }
+    var acc : uint64 = uint64(0)
+    for (i in range(count)) {
+        let base = i * 6
+        acc ^= uint64((particles[base + 0] + particles[base + 1] + particles[base + 2]) * 100000.0)
+    }
+    return mix_checksum(acc, uint64(seed))
+}
+
+const uint sha256_k[64] = {
+    0x428a2f98u, 0x71374491u, 0xb5c0fbcfu, 0xe9b5dba5u, 0x3956c25bu, 0x59f111f1u, 0x923f82a4u, 0xab1c5ed5u,
+    0xd807aa98u, 0x12835b01u, 0x243185beu, 0x550c7dc3u, 0x72be5d74u, 0x80deb1feu, 0x9bdc06a7u, 0xc19bf174u,
+    0xe49b69c1u, 0xefbe4786u, 0x0fc19dc6u, 0x240ca1ccu, 0x2de92c6fu, 0x4a7484aau, 0x5cb0a9dcu, 0x76f988dau,
+    0x983e5152u, 0xa831c66du, 0xb00327c8u, 0xbf597fc7u, 0xc6e00bf3u, 0xd5a79147u, 0x06ca6351u, 0x14292967u,
+    0x27b70a85u, 0x2e1b2138u, 0x4d2c6dfcu, 0x53380d13u, 0x650a7354u, 0x766a0abbu, 0x81c2c92eu, 0x92722c85u,
+    0xa2bfe8a1u, 0xa81a664bu, 0xc24b8b70u, 0xc76c51a3u, 0xd192e819u, 0xd6990624u, 0xf40e3585u, 0x106aa070u,
+    0x19a4c116u, 0x1e376c08u, 0x2748774cu, 0x34b0bcb5u, 0x391c0cb3u, 0x4ed8aa4au, 0x5b9cca4fu, 0x682e6ff3u,
+    0x748f82eeu, 0x78a5636fu, 0x84c87814u, 0x8cc70208u, 0x90befffau, 0xa4506cebu, 0xbef9a3f7u, 0xc67178f2u,
+}
+
+def rotr_uint(x : uint; n : uint) : uint {
+    return (x >> n) | (x << (uint(32) - n))
+}
+
+def sha256_bytes(input : array<uint8>) : array<uint8> {
+    var data : array<uint8>
+    resize(data, 0)
+    for (i in range(input.length())) {
+        data.insertLast(input[i])
+    }
+    var bit_size : uint64 = uint64(data.length()) * uint64(8)
+    data.insertLast(uint8(0x80))
+    while ((data.length() % 64) != 56) {
+        data.insertLast(uint8(0))
+    }
+    for (int i = 7; i >= 0; --i) {
+        data.insertLast(uint8((bit_size >> (uint64(i) * 8)) & uint64(0xff)))
+    }
+
+    var w : array<uint>
+    resize(w, 64)
+    var h : array<uint>
+    resize(h, 8)
+    h[0] = 0x6a09e667u
+    h[1] = 0xbb67ae85u
+    h[2] = 0x3c6ef372u
+    h[3] = 0xa54ff53au
+    h[4] = 0x510e527fu
+    h[5] = 0x9b05688cu
+    h[6] = 0x1f83d9abu
+    h[7] = 0x5be0cd19u
+
+    var chunk = 0
+    while (chunk < data.length()) {
+        for (i in range(16)) {
+            let index = chunk + i * 4
+            w[i] = (uint(data[index]) << 24)
+                 | (uint(data[index + 1]) << 16)
+                 | (uint(data[index + 2]) << 8)
+                 | uint(data[index + 3])
+        }
+        for (i in range(16, 64)) {
+            let s0 = rotr_uint(w[i - 15], 7) ^ rotr_uint(w[i - 15], 18) ^ (w[i - 15] >> 3)
+            let s1 = rotr_uint(w[i - 2], 17) ^ rotr_uint(w[i - 2], 19) ^ (w[i - 2] >> 10)
+            w[i] = w[i - 16] + s0 + w[i - 7] + s1
+        }
+        var a = h[0]
+        var b = h[1]
+        var c = h[2]
+        var d = h[3]
+        var e = h[4]
+        var f = h[5]
+        var g = h[6]
+        var hh = h[7]
+
+        for (i in range(64)) {
+            let S1 = rotr_uint(e, 6) ^ rotr_uint(e, 11) ^ rotr_uint(e, 25)
+            let ch = (e & f) ^ ((~e) & g)
+            let temp1 = hh + S1 + ch + sha256_k[i] + w[i]
+            let S0 = rotr_uint(a, 2) ^ rotr_uint(a, 13) ^ rotr_uint(a, 22)
+            let maj = (a & b) ^ (a & c) ^ (b & c)
+            let temp2 = S0 + maj
+
+            hh = g
+            g = f
+            f = e
+            e = d + temp1
+            d = c
+            c = b
+            b = a
+            a = temp1 + temp2
+        }
+
+        h[0] += a
+        h[1] += b
+        h[2] += c
+        h[3] += d
+        h[4] += e
+        h[5] += f
+        h[6] += g
+        h[7] += hh
+        chunk += 64
+    }
+
+    var digest : array<uint8>
+    resize(digest, 32)
+    for (i in range(8)) {
+        let value = h[i]
+        digest[i * 4 + 0] = uint8((value >> 24) & 0xff)
+        digest[i * 4 + 1] = uint8((value >> 16) & 0xff)
+        digest[i * 4 + 2] = uint8((value >> 8) & 0xff)
+        digest[i * 4 + 3] = uint8(value & 0xff)
+    }
+    return digest
+}
+
+def work_sha256(seed : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(1500)) {
+        var message : array<uint8>
+        resize(message, 0)
+        message.insertLast(uint8(0x73))
+        message.insertLast(uint8(0x68))
+        message.insertLast(uint8(0x61))
+        message.insertLast(uint8(0x32))
+        message.insertLast(uint8(0x35))
+        message.insertLast(uint8(0x36))
+        message.insertLast(uint8(0x2d))
+        message.insertLast(uint8(0x62))
+        message.insertLast(uint8(0x65))
+        message.insertLast(uint8(0x6e))
+        message.insertLast(uint8(0x63))
+        message.insertLast(uint8(0x68))
+        message.insertLast(uint8(0x6d))
+        message.insertLast(uint8(0x61))
+        message.insertLast(uint8(0x72))
+        message.insertLast(uint8(0x6b))
+        message.insertLast(uint8(0x2d))
+        append_decimal_digits(message, i)
+        var digest = sha256_bytes(message)
+        acc ^= uint64(digest[0]) << uint64(56)
+        acc ^= uint64(digest[8]) << uint64(40)
+        acc ^= uint64(digest[16]) << uint64(24)
+        acc ^= uint64(digest[24]) << uint64(8)
+    }
+    return mix_checksum(acc, uint64(seed))
+}
+
+def spectral_a(i : uint; j : uint) : double {
+    let ij = i + j
+    return 1.0 / double((ij * (ij + 1) / 2) + i + 1)
+}
+
+def spectral_multiply(u : array<double>; out : array<double>) {
+    let n = u.length()
+    for (i in range(n)) {
+        var sum = 0.0
+        for (j in range(n)) {
+            sum += spectral_a(i, j) * u[j]
+        }
+        out[i] = sum
+    }
+}
+
+def spectral_multiply_transposed(u : array<double>; out : array<double>) {
+    let n = u.length()
+    for (i in range(n)) {
+        var sum = 0.0
+        for (j in range(n)) {
+            sum += spectral_a(j, i) * u[j]
+        }
+        out[i] = sum
+    }
+}
+
+def work_spectral_norm(seed : int) : uint64 {
+    const uint n = 120
+    var u : array<double>
+    var v : array<double>
+    var tmp : array<double>
+    resize(u, n)
+    resize(v, n)
+    resize(tmp, n)
+    for (i in range(n)) {
+        u[i] = 1.0
+        v[i] = 0.0
+        tmp[i] = 0.0
+    }
+    for (iter in range(10)) {
+        spectral_multiply(u, tmp)
+        spectral_multiply_transposed(tmp, v)
+        spectral_multiply(v, tmp)
+        spectral_multiply_transposed(tmp, u)
+    }
+    var uv = 0.0
+    var vv = 0.0
+    for (i in range(n)) {
+        uv += u[i] * v[i]
+        vv += v[i] * v[i]
+    }
+    let ratio = math.sqrt(uv / vv)
+    return mix_checksum(0, uint64(ratio * 1000000.0))
 }
 
 def work_primes_loop(seed : int) : uint64 {
@@ -147,11 +590,67 @@ def work_sort(seed : int) : uint64 {
     return acc
 }
 
+def work_string2float(seed : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(12000)) {
+        let value = double((i % 97) * 0.03125 + 10.0)
+        var text = format_decimal_text(value, 6)
+        let parsed = parse_double_from_text(text)
+        acc ^= uint64(parsed * 100000.0)
+        acc += uint64(text.length())
+    }
+    return mix_checksum(acc, uint64(seed))
+}
+
+def make_tree_node(depth : int; seed : int; values : array<int>; left : array<int>; right : array<int>) : int {
+    values.insertLast(seed)
+    left.insertLast(-1)
+    right.insertLast(-1)
+    let idx = int(values.length()) - 1
+    if (depth > 0) {
+        let left_child = make_tree_node(depth - 1, seed * 2 + 1, values, left, right)
+        let right_child = make_tree_node(depth - 1, seed * 2 + 2, values, left, right)
+        left[idx] = left_child
+        right[idx] = right_child
+    }
+    return idx
+}
+
+def checksum_tree(index : int; values : array<int>; left : array<int>; right : array<int>) : uint64 {
+    if (index < 0) {
+        return uint64(0)
+    }
+    var acc : uint64 = uint64(values[index])
+    acc += checksum_tree(left[index], values, left, right)
+    acc += checksum_tree(right[index], values, left, right)
+    return acc
+}
+
+def work_tree(seed : int) : uint64 {
+    var values : array<int>
+    var left : array<int>
+    var right : array<int>
+    resize(values, 0)
+    resize(left, 0)
+    resize(right, 0)
+    let root = make_tree_node(13, 1 + seed, values, left, right)
+    return checksum_tree(root, values, left, right)
+}
+
 [export]
-def benchmark_arithmetic_mix(repeat : int) : uint64 {
+def benchmark_dictionary(repeat : int) : uint64 {
     var acc : uint64 = uint64(0)
     for (i in range(repeat)) {
-        acc = mix_checksum(acc, work_arithmetic_mix(i))
+        acc = mix_checksum(acc, work_dictionary(i))
+    }
+    return acc
+}
+
+[export]
+def benchmark_exp_loop(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_exp_loop(i))
     }
     return acc
 }
@@ -175,10 +674,46 @@ def benchmark_fibonacci_recursive(repeat : int) : uint64 {
 }
 
 [export]
+def benchmark_float2string(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_float2string(i))
+    }
+    return acc
+}
+
+[export]
 def benchmark_mandelbrot(repeat : int) : uint64 {
     var acc : uint64 = uint64(0)
     for (i in range(repeat)) {
         acc = mix_checksum(acc, work_mandelbrot(i))
+    }
+    return acc
+}
+
+[export]
+def benchmark_n_bodies(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_n_bodies(i))
+    }
+    return acc
+}
+
+[export]
+def benchmark_native_loop(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_native_loop(i))
+    }
+    return acc
+}
+
+[export]
+def benchmark_particles_kinematics(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_particles_kinematics(i))
     }
     return acc
 }
@@ -202,10 +737,46 @@ def benchmark_queen(repeat : int) : uint64 {
 }
 
 [export]
+def benchmark_sha256(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_sha256(i))
+    }
+    return acc
+}
+
+[export]
 def benchmark_sort(repeat : int) : uint64 {
     var acc : uint64 = uint64(0)
     for (i in range(repeat)) {
         acc = mix_checksum(acc, work_sort(i))
+    }
+    return acc
+}
+
+[export]
+def benchmark_spectral_norm(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_spectral_norm(i))
+    }
+    return acc
+}
+
+[export]
+def benchmark_string2float(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_string2float(i))
+    }
+    return acc
+}
+
+[export]
+def benchmark_tree(repeat : int) : uint64 {
+    var acc : uint64 = uint64(0)
+    for (i in range(repeat)) {
+        acc = mix_checksum(acc, work_tree(i))
     }
     return acc
 }
