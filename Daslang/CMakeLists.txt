@@ -36,32 +36,31 @@ set(DAS_TESTS_DISABLED ON CACHE BOOL "" FORCE)
 
 add_subdirectory("${DASCRIPT_ROOT}" "${CMAKE_BINARY_DIR}/vendor/daScript")
 
-add_executable(hello_daslang
+add_executable(daslang_benchmark
     src/main.cpp
 )
 
-target_compile_definitions(hello_daslang PRIVATE
+target_compile_definitions(daslang_benchmark PRIVATE
     DAS_MOD_EXPORTS
     DASLANG_BENCHMARK_PROJECT_ROOT="${DASLANG_BENCHMARK_ROOT}"
     DASLANG_BENCHMARK_DAS_ROOT="${DASCRIPT_ROOT}"
 )
 
-target_include_directories(hello_daslang PRIVATE
+target_include_directories(daslang_benchmark PRIVATE
     "${DASCRIPT_ROOT}/include"
     "${CMAKE_BINARY_DIR}/vendor/daScript/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.."
 )
 
-target_link_libraries(hello_daslang PRIVATE
+target_link_libraries(daslang_benchmark PRIVATE
     libDaScript
     Threads::Threads
 )
 
-target_compile_features(hello_daslang PRIVATE cxx_std_17)
-
 if(MSVC)
-    target_compile_options(hello_daslang PRIVATE /wd4005)
+    target_compile_options(daslang_benchmark PRIVATE /wd4005 /wd4267)
 endif()
 
-set_target_properties(hello_daslang PROPERTIES
+set_target_properties(daslang_benchmark PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${DASLANG_BENCHMARK_ROOT}"
 )
