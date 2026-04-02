@@ -1,6 +1,6 @@
 ﻿# Script Language Benchmarks
 
-> **Notice:** This project has primarily been developed using Codex.
+> **Notice:** This project has primarily been developed using Codex. Please don't take the generated AI code at face value, since I still haven't properly reviewed it.
 
 
 A side-by-side benchmark suite that compares the runtime performance of three scripting engines—AngelScript, Daslang, and Lua—across sixteen workloads of varying compute and memory patterns. Each engine has its own CMake project and executable under `build-<engine>/Release`, and the benchmark reporting is kept alongside the binaries for easy reference.
