@@ -37,24 +37,22 @@ Each language bundles the workload implementations inside one script under `scri
 ## Latest Benchmarks (report dated April 2 2026)
 | item | AngelScript | Daslang | Lua | winner |
 | --- | ---: | ---: | ---: | --- |
-| dictionary | 1.241 | 1.139 | 5.487 | Daslang |
-| exp_loop | 1.114 | 1.091 | 9.713 | Lua |
-| fibonacci_loop | 53.216 | 18.536 | 27.077 | Daslang |
-| fibonacci_recursive | 762.154 | 265.669 | 587.917 | Daslang |
-| float2string | 17.775 | 18.944 | 42.852 | AngelScript |
-| mandelbrot | 58.353 | 31.189 | 48.587 | Daslang |
-| n_bodies | 0.213 | 0.223 | 0.222 | AngelScript |
-| native_loop | 8.615 | 8.569 | 295.265 | Daslang |
-| particles_kinematics | 6.398 | 6.486 | 7.416 | AngelScript |
-| primes_loop | 28.449 | 7.716 | 13.645 | Daslang |
-| queen | 243.795 | 131.724 | 216.132 | Daslang |
-| sha256 | 3.934 | 4.184 | 4.189 | AngelScript |
-| sort | 338.958 | 104.375 | 4.319 | Lua |
-| spectral_norm | 3.940 | 3.631 | 3.865 | Daslang |
-| string2float | 34.616 | 35.514 | 47.020 | AngelScript |
-| tree | 4.965 | 4.913 | 34.006 | Daslang |
-
-AngelScript led in seven workloads, Daslang in six, and Lua in three, as summarized in `benchmark_report.md`.
+| dictionary | 1.192 | 1.087 | 3.954 | Daslang |
+| exp_loop | 1.114 | 1.091 | 9.032 | Daslang |
+| fibonacci_loop | 52.941 | 18.536 | 25.854 | Daslang |
+| fibonacci_recursive | 762.154 | 263.237 | 578.521 | Daslang |
+| float2string | 17.775 | 18.944 | 41.009 | AngelScript |
+| mandelbrot | 58.353 | 31.189 | 47.228 | Daslang |
+| n_bodies | 0.213 | 0.213 | 0.213 | AngelScript / Daslang / Lua |
+| native_loop | 8.615 | 8.555 | 295.265 | Daslang |
+| particles_kinematics | 6.398 | 6.486 | 6.573 | AngelScript |
+| primes_loop | 28.449 | 7.716 | 12.921 | Daslang |
+| queen | 243.795 | 129.541 | 208.761 | Daslang |
+| sha256 | 3.787 | 4.168 | 3.821 | AngelScript |
+| sort | 338.213 | 103.294 | 3.949 | Lua |
+| spectral_norm | 3.633 | 3.630 | 3.630 | Daslang / Lua |
+| string2float | 34.216 | 34.754 | 47.020 | AngelScript |
+| tree | 4.873 | 4.584 | 30.922 | Daslang |
 
 ## Measurement Environment
 - Date: April 2, 2026
